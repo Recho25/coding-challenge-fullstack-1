@@ -1,14 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  useWindowDimensions,
-  View
-} from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import useFetchSuggestions from "../hooks/textures/useFetchSuggestions";
 import {Texture} from "../types/textures/Texture";
 import {AutocompleteProps} from "../types/textures/suggestions/AutocompleteProps";
@@ -17,9 +8,7 @@ import useKeyboardEvents from "../hooks/events/keyboard/useKeyboardEvents";
 
 const Autocomplete = ({onSuggestionSelected}: AutocompleteProps) => {
   const windowWidth = useWindowDimensions().width;
-  const inputFontSize = windowWidth > 768 ? 18 : 16;
-  const inputPaddingHorizontal = windowWidth > 768 ? 20 : 16;
-  const inputPaddingVertical = windowWidth > 768 ? 14 : 12;
+  const dynamicStyles = createDynamicStyles(windowWidth);
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -71,18 +60,18 @@ const Autocomplete = ({onSuggestionSelected}: AutocompleteProps) => {
       <TouchableOpacity
         key={index}
         style={[
-          styles.suggestion,
-          selectedIndex === index ? styles.selectedSuggestion : {},
+          dynamicStyles.suggestion,
+          selectedIndex === index ? dynamicStyles.selectedSuggestion : {},
         ]}
         onPress={() => handleSelect(suggestion)}
       >
         <Image
           source={{ uri: suggestion.thumbnail_url }}
-          style={styles.thumbnail}
+          style={dynamicStyles.thumbnail}
         />
         <View>
-          <Text style={styles.name}>{suggestion.name}</Text>
-          <Text style={styles.description}>
+          <Text style={dynamicStyles.name}>{suggestion.name}</Text>
+          <Text style={dynamicStyles.description}>
             {suggestion.description.substring(0, 100)}...
           </Text>
         </View>
@@ -92,22 +81,17 @@ const Autocomplete = ({onSuggestionSelected}: AutocompleteProps) => {
 
 
   return (
-    <View style={styles.autocomplete}>
+    <View style={dynamicStyles.autocomplete}>
       <TextInput
         ref={searchInputRef}
-        style={[styles.input, {
-            paddingHorizontal: inputPaddingHorizontal,
-            paddingVertical: inputPaddingVertical,
-            fontSize: inputFontSize,
-          },
-        ]}
+        style={dynamicStyles.input}
         value={searchTerm}
         onChangeText={setSearchTerm}
         placeholder="Search textures..."
       />
       { showSuggestions &&
       <React.Fragment>
-        <ScrollView style={styles.suggestions} testID={"suggestions"}>
+        <ScrollView style={dynamicStyles.suggestions} testID={"suggestions"}>
           {renderSuggestions()}
         </ScrollView>
       </React.Fragment>
@@ -119,48 +103,50 @@ const Autocomplete = ({onSuggestionSelected}: AutocompleteProps) => {
 export default Autocomplete;
 
 
-const styles = StyleSheet.create({
-  autocomplete: {
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  selectedSuggestion: {
-    backgroundColor: '#E0E0E0',
-  },
-  input: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-    backgroundColor: '#FFFFFF',
-    marginBottom: 8,
-    color: '#333',
-  },
-  suggestions: {
-    width: '100%',
-    marginTop: 10,
-  },
-  suggestion: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: '#eee',
-  },
-  thumbnail: {
-    width: 50,
-    height: 50,
-    marginRight: 10,
-  },
-  name: {
-    fontWeight: 'bold',
-  },
-  description: {
-    fontSize: 12,
-  },
-});
-
+const createDynamicStyles = (windowWidth: number) => {
+  return StyleSheet.create({
+    autocomplete: {
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    selectedSuggestion: {
+      backgroundColor: '#E0E0E0',
+    },
+    input: {
+      width: '100%',
+      borderWidth: 1,
+      borderColor: '#E0E0E0',
+      borderRadius: 8,
+      paddingHorizontal: windowWidth > 768 ? 20 : 16,
+      paddingVertical: windowWidth > 768 ? 14 : 12,
+      fontSize: windowWidth > 768 ? 18 : 16,
+      backgroundColor: '#FFFFFF',
+      marginBottom: 8,
+      color: '#333',
+    },
+    suggestions: {
+      width: '100%',
+      marginTop: 10,
+    },
+    suggestion: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 10,
+      borderBottomWidth: 1,
+      borderColor: '#eee',
+    },
+    thumbnail: {
+      width: 50,
+      height: 50,
+      marginRight: 10,
+    },
+    name: {
+      fontWeight: 'bold',
+      fontSize: windowWidth > 768 ? 18 : 16,
+    },
+    description: {
+      fontSize: windowWidth > 768 ? 14 : 12,
+    },
+  });
+};
 
