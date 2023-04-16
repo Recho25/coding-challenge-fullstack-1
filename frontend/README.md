@@ -17,8 +17,7 @@
 
 2. Run test command.
    - npm test
-
-
+   
 ![Alt Text](public/static/images/tests.png)
 
 
