@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import {Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import useFetchSuggestions from "../hooks/textures/useFetchSuggestions";
 import {Texture} from "../types/textures/Texture";
 import {AutocompleteProps} from "../types/textures/suggestions/AutocompleteProps";
@@ -7,15 +7,12 @@ import useKeyboardEvents from "../hooks/events/keyboard/useKeyboardEvents";
 
 
 const Autocomplete = ({onSuggestionSelected}: AutocompleteProps) => {
-  const windowWidth = useWindowDimensions().width;
-  const dynamicStyles = createDynamicStyles(windowWidth);
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const searchInputRef = useRef(null);
   const shouldFetch = searchTerm.length >= 2;
   const {data: suggestions, error, loading} = useFetchSuggestions({searchTerm, shouldFetch});
-
 
   useEffect(() => {
     setShowSuggestions(shouldFetch);
@@ -60,18 +57,18 @@ const Autocomplete = ({onSuggestionSelected}: AutocompleteProps) => {
       <TouchableOpacity
         key={index}
         style={[
-          dynamicStyles.suggestion,
-          selectedIndex === index ? dynamicStyles.selectedSuggestion : {},
+          styles.suggestion,
+          selectedIndex === index ? styles.selectedSuggestion : {},
         ]}
         onPress={() => handleSelect(suggestion)}
       >
         <Image
           source={{ uri: suggestion.thumbnail_url }}
-          style={dynamicStyles.thumbnail}
+          style={styles.thumbnail}
         />
         <View>
-          <Text style={dynamicStyles.name}>{suggestion.name}</Text>
-          <Text style={dynamicStyles.description}>
+          <Text style={styles.name}>{suggestion.name}</Text>
+          <Text style={styles.description}>
             {suggestion.description.substring(0, 100)}...
           </Text>
         </View>
@@ -81,17 +78,17 @@ const Autocomplete = ({onSuggestionSelected}: AutocompleteProps) => {
 
 
   return (
-    <View style={dynamicStyles.autocomplete}>
+    <View style={styles.autocomplete}>
       <TextInput
         ref={searchInputRef}
-        style={dynamicStyles.input}
+        style={styles.input}
         value={searchTerm}
         onChangeText={setSearchTerm}
         placeholder="Search textures..."
       />
       { showSuggestions &&
       <React.Fragment>
-        <ScrollView style={dynamicStyles.suggestions} testID={"suggestions"}>
+        <ScrollView style={styles.suggestions} testID={"suggestions"}>
           {renderSuggestions()}
         </ScrollView>
       </React.Fragment>
@@ -103,50 +100,49 @@ const Autocomplete = ({onSuggestionSelected}: AutocompleteProps) => {
 export default Autocomplete;
 
 
-const createDynamicStyles = (windowWidth: number) => {
-  return StyleSheet.create({
-    autocomplete: {
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    selectedSuggestion: {
-      backgroundColor: '#E0E0E0',
-    },
-    input: {
-      width: '100%',
-      borderWidth: 1,
-      borderColor: '#E0E0E0',
-      borderRadius: 8,
-      paddingHorizontal: windowWidth > 768 ? 20 : 16,
-      paddingVertical: windowWidth > 768 ? 14 : 12,
-      fontSize: windowWidth > 768 ? 18 : 16,
-      backgroundColor: '#FFFFFF',
-      marginBottom: 8,
-      color: '#333',
-    },
-    suggestions: {
-      width: '100%',
-      marginTop: 10,
-    },
-    suggestion: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: 10,
-      borderBottomWidth: 1,
-      borderColor: '#eee',
-    },
-    thumbnail: {
-      width: 50,
-      height: 50,
-      marginRight: 10,
-    },
-    name: {
-      fontWeight: 'bold',
-      fontSize: windowWidth > 768 ? 18 : 16,
-    },
-    description: {
-      fontSize: windowWidth > 768 ? 14 : 12,
-    },
-  });
-};
+const styles = StyleSheet.create({
+  autocomplete: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  selectedSuggestion: {
+    backgroundColor: '#E0E0E0',
+  },
+  input: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    fontSize: 16,
+    backgroundColor: '#FFFFFF',
+    marginBottom: 8,
+    color: '#333',
+  },
+  suggestions: {
+    width: '100%',
+    marginTop: 10,
+  },
+  suggestion: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: '#eee',
+  },
+  thumbnail: {
+    width: 50,
+    height: 50,
+    marginRight: 10,
+  },
+  name: {
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  description: {
+    fontSize: 14,
+  },
+});
+
 
