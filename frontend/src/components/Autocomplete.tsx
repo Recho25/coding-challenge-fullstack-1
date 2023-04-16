@@ -1,5 +1,14 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  useWindowDimensions,
+  View
+} from "react-native";
 import useFetchSuggestions from "../hooks/textures/useFetchSuggestions";
 import {Texture} from "../types/textures/Texture";
 import {AutocompleteProps} from "../types/textures/suggestions/AutocompleteProps";
@@ -7,12 +16,17 @@ import useKeyboardEvents from "../hooks/events/keyboard/useKeyboardEvents";
 
 
 const Autocomplete = ({onSuggestionSelected}: AutocompleteProps) => {
+  const windowWidth = useWindowDimensions().width;
+  const inputFontSize = windowWidth > 768 ? 18 : 16;
+  const inputPaddingHorizontal = windowWidth > 768 ? 20 : 16;
+  const inputPaddingVertical = windowWidth > 768 ? 14 : 12;
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const searchInputRef = useRef(null);
   const shouldFetch = searchTerm.length >= 2;
   const {data: suggestions, error, loading} = useFetchSuggestions({searchTerm, shouldFetch});
+
 
   useEffect(() => {
     setShowSuggestions(shouldFetch);
@@ -81,7 +95,12 @@ const Autocomplete = ({onSuggestionSelected}: AutocompleteProps) => {
     <View style={styles.autocomplete}>
       <TextInput
         ref={searchInputRef}
-        style={styles.input}
+        style={[styles.input, {
+            paddingHorizontal: inputPaddingHorizontal,
+            paddingVertical: inputPaddingVertical,
+            fontSize: inputFontSize,
+          },
+        ]}
         value={searchTerm}
         onChangeText={setSearchTerm}
         placeholder="Search textures..."
@@ -113,8 +132,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E0E0E0',
     borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     fontSize: 16,
     backgroundColor: '#FFFFFF',
     marginBottom: 8,
