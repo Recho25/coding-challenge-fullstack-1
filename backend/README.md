@@ -25,9 +25,16 @@
 1. Go to backend directory.
    - cd backend
    
-2.Run pytest command.
+2. Run pytest command.
     - pytest
 
 ![Alt Text](app/static/images/tests.png)
+
+
+## Deployment
+
+API is deployed on Render.
+- https://visaoapi.onrender.com/
+
 
 ## Comments
