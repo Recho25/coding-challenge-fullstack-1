@@ -42,15 +42,15 @@ const Autocomplete = ({onSuggestionSelected}: AutocompleteProps) => {
 
   const renderSuggestions = () => {
     if (loading) {
-      return <Text>Loading...</Text>;
+      return <Text style={styles.suggestionText}>Loading...</Text>;
     }
 
     if (error) {
-      return <Text>Error: {error.message}</Text>;
+      return <Text style={styles.suggestionText}>Error: {error.message}</Text>;
     }
 
     if (suggestions.length === 0) {
-      return <Text>No suggestions found</Text>;
+      return <Text style={styles.suggestionText}>No suggestions found</Text>;
     }
 
     return suggestions.map((suggestion: Texture, index: number) => (
@@ -142,6 +142,13 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
+  },
+  suggestionText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 10,
   },
 });
 
