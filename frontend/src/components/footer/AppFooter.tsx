@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 16,
     marginRight: 10,
-    bold: true,
+    fontWeight: 'bold',
   },
   footerLink: {
     color: '#ffffff',
