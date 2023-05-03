@@ -1,4 +1,8 @@
 # Visao Coding Challenge
+
+UPDATE: My free trial to ElasticSearch ended so currently the api is not fetching correctly. Will need to move it to MongoDb Cloud storage for the moment.
+
+
 ## Instructions
 Design an API(backend) which serves suggestions of textures and a web page(frontend) 
 which includes an autocomplete component to search them.
